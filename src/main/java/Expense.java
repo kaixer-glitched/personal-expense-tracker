@@ -7,6 +7,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Expense {
     private Long id;
-    private int amount;
+    private double amount;
     private String productName;
 }
