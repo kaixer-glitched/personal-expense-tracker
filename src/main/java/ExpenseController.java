@@ -34,4 +34,8 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
     }
 
+    @GetMapping
+    public ResponseEntity<Double> getTotalExpenses() {
+        return ResponseEntity.ok(expenseServices.getTotalExpenses());
+    }
 }
