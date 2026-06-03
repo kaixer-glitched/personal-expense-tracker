@@ -14,13 +14,28 @@ public class ExpenseServices {
     Long firstId = 1L;
 
     // we'll simply return a list that contains all expenses
-    public List<Expense> getAllExpenses() {
-        return expenses;
-    }
+    public List<Expense> getAllExpenses() { return expenses; }
 
     public Optional<Expense> getExpenseById(Long id) {
         return Optional.ofNullable(expensesById.get(id));
     }
 
+    // to be checked if working
+    public double getTotalExpenses() {
+        double total = 0;
 
+        if (expenses.isEmpty()) return total;
+
+        for (Expense expense : expenses) {
+            total += expense.getAmount();
+        }
+        return total;
+    }
+
+    public Expense addExpense(Expense expense) {
+        expenses.add(expense);
+        expensesById.put(expense.getId(), expense);
+
+        return expense;
+    }
 }
