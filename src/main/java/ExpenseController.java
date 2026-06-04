@@ -33,8 +33,8 @@ public class ExpenseController {
         Expense newExpense = expenseServices.addExpense(expense);
         return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
     }
-
-    @GetMapping
+    // added total so that spring don't get confused which one to call between all GETs
+    @GetMapping("/total")
     public ResponseEntity<Double> getTotalExpenses() {
         return ResponseEntity.ok(expenseServices.getTotalExpenses());
     }

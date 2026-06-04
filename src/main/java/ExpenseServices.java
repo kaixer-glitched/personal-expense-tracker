@@ -1,5 +1,6 @@
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -20,13 +21,17 @@ public class ExpenseServices {
         return Optional.ofNullable(expensesById.get(id));
     }
 
-    public double getTotalExpenses() {
+    // we'll return a BigDecimal object since we changed our model for precision
+    public BigDecimal getTotalExpenses() {
 
-        double total = 0;
+        BigDecimal total = BigDecimal.ZERO;
 
         if (expenses.isEmpty()) return total;
 
-        for (Expense expense : expenses) { total += expense.getAmount(); }
+        // BigDecimal is immutable
+        // so if we just do total.add(x), it really doesnt change the value of total
+        // so instead we will re-assign the value that we got from total.add() back to total (self)
+        for (Expense expense : expenses) { total = total.add(expense.getAmount()); }
 
         return total;
     }
