@@ -1,7 +1,9 @@
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RequestMapping("/expense")
@@ -29,13 +31,14 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<Expense> addExpense(@RequestBody Expense expense) {
+    public ResponseEntity<Expense> addExpense(@Valid @RequestBody Expense expense) {
         Expense newExpense = expenseServices.addExpense(expense);
         return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
     }
-    // added total so that spring don't get confused which one to call between all GETs
+
+    // added /total so that spring don't get confused which one to call between all GETs
     @GetMapping("/total")
-    public ResponseEntity<Double> getTotalExpenses() {
+    public ResponseEntity<BigDecimal> getTotalExpenses() {
         return ResponseEntity.ok(expenseServices.getTotalExpenses());
     }
 }
