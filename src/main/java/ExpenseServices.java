@@ -38,13 +38,21 @@ public class ExpenseServices {
 
     // we can eventually work on concurrent hashmap for thread-safety
     // NOTE: concurrent or not, this one is just fine.
-    public Expense addExpense(Expense expense) {
+    public ExpenseResponseDTO addExpense(ExpenseRequestDTO expenseRequestDTO) {
+
+        Expense expense = new Expense();
+        expense.setExpenseDescription(expenseRequestDTO.getExpenseDescription());
+        expense.setAmount(expenseRequestDTO.getAmount());
 
         expense.setId(firstId++);
         expenses.add(expense);
-
         expensesById.put(expense.getId(), expense);
 
-        return expense;
+        Expense savedExpense = expensesById.get(expense.getId());
+
+        return new ExpenseResponseDTO(
+                savedExpense.getAmount(),
+                savedExpense.getExpenseDescription()
+        );
     }
 }

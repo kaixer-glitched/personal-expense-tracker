@@ -29,10 +29,10 @@ public class ExpenseController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    // wtf that worked?? Oh, wait it was the right one by chat, hooray!
     @PostMapping
-    public ResponseEntity<Expense> addExpense(@Valid @RequestBody Expense expense) {
-        Expense newExpense = expenseServices.addExpense(expense);
+    public ResponseEntity<ExpenseResponseDTO> addExpense(@Valid @RequestBody ExpenseRequestDTO expenseRequestDTO) {
+        ExpenseResponseDTO newExpense = expenseServices.addExpense(expenseRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
     }
 
