@@ -57,4 +57,9 @@ public class ExpenseServices {
                 savedExpense.getExpenseDescription()
         );
     }
+    // Returns an Optional
+    // Either way, if it doesn't exist it will return an Optional generic
+    public Optional<Expense> deleteExpenseById(Long id) {
+        return Optional.ofNullable(expensesById.get(id));
+    }
 }
