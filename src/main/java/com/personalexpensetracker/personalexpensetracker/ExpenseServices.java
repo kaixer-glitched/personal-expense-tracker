@@ -1,3 +1,5 @@
+package com.personalexpensetracker.personalexpensetracker;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

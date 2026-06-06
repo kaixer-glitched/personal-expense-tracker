@@ -1,3 +1,5 @@
+package com.personalexpensetracker.personalexpensetracker;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
