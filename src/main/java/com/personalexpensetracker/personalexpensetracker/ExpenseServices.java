@@ -62,4 +62,17 @@ public class ExpenseServices {
     public Optional<Expense> deleteExpenseById(Long id) {
         return Optional.ofNullable(expensesById.get(id));
     }
+
+    public Optional<Expense> updateExpense(Long id, Expense updatedExpense) {
+        Expense expense = expensesById.get(id);
+
+        if (expense == null) {
+            return Optional.empty();
+        }
+
+        expense.setAmount(updatedExpense.getAmount());
+        expense.setExpenseDescription(updatedExpense.getExpenseDescription());
+
+        return Optional.of(expense);
+    }
 }
