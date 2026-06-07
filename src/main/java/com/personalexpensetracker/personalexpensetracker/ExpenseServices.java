@@ -7,7 +7,7 @@ import java.util.*;
 
 @Service
 public class ExpenseServices {
-
+    // TODO: Convert this project into JPA
     // we'll use an ArrayList to get all expenses
     List<Expense> expenses = new ArrayList<>();
 
@@ -60,7 +60,11 @@ public class ExpenseServices {
     // Returns an Optional
     // Either way, if it doesn't exist it will return an Optional generic
     public Optional<Expense> deleteExpenseById(Long id) {
-        return Optional.ofNullable(expensesById.get(id));
+        Optional<Expense> deleteExpense = getExpenseById(id);
+
+        deleteExpense.ifPresent(expense -> expenses.remove(expense));
+
+        return deleteExpense;
     }
 
     public Optional<Expense> updateExpense(Long id, Expense updatedExpense) {
