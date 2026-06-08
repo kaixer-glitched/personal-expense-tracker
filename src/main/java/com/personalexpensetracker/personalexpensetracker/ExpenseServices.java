@@ -1,6 +1,9 @@
 package com.personalexpensetracker.personalexpensetracker;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -30,18 +33,17 @@ public class ExpenseServices {
     }
 
     // we'll return a BigDecimal object since we changed our model for precision
+    // @Transactional(readOnly = true) means that we are informing spring that this is read-only
+    // that saves a lot of memory and runs more efficiently by reducing load.
+    // we referenced BigDecimal totalExpenses by the value that sumAllExpenses() returns (which is a BigDecimal).
+    // null checking is important cause SUM() returns null if there is nothing to sum
+    // JPA directs that to a Java null coming from SUM() query in repo
+    // instead of giving null to whoever calls this method
+    // we return BigDecimal.ZERO as a sensible value than null.
+    @Transactional(readOnly = true)
     public BigDecimal getTotalExpenses() {
-
-        BigDecimal total = BigDecimal.ZERO;
-
-        if (expenses.isEmpty()) return total;
-
-        // BigDecimal is immutable
-        // so if we just do total.add(x), it really doesnt change the value of total
-        // so instead we will re-assign the value that we got from total.add() back to total (self)
-        for (Expense expense : expenses) { total = total.add(expense.getAmount()); }
-
-        return total;
+        BigDecimal totalExpenses = expenseRepository.sumAllExpenses();
+        return totalExpenses != null ? totalExpenses : BigDecimal.ZERO;
     }
 
     // we can eventually work on concurrent hashmap for thread-safety
