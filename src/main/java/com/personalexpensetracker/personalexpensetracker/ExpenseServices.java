@@ -8,6 +8,13 @@ import java.util.*;
 @Service
 public class ExpenseServices {
     // TODO: Convert this project into JPA
+
+    private final ExpenseRepository expenseRepository;
+
+    public ExpenseServices(ExpenseRepository expenseRepository) {
+        this.expenseRepository = expenseRepository;
+    }
+
     // we'll use an ArrayList to get all expenses
     List<Expense> expenses = new ArrayList<>();
 
@@ -17,10 +24,10 @@ public class ExpenseServices {
     // pre-gen ids
     Long firstId = 1L;
 
-    public List<Expense> getAllExpenses() { return expenses; }
+    public List<Expense> getAllExpenses() { return expenseRepository.findAll(); }
 
     public Optional<Expense> getExpenseById(Long id) {
-        return Optional.ofNullable(expensesById.get(id));
+        return expenseRepository.findById(id);
     }
 
     // we'll return a BigDecimal object since we changed our model for precision
