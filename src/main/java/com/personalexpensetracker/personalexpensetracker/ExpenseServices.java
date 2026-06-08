@@ -21,9 +21,8 @@ public class ExpenseServices {
     // we will use a hashmap for faster lookups
     Map<Long, Expense> expensesById = new HashMap<>();
 
-    // pre-gen ids
-    Long firstId = 1L;
 
+    // findAll() returns a List
     public List<Expense> getAllExpenses() { return expenseRepository.findAll(); }
 
     public Optional<Expense> getExpenseById(Long id) {
@@ -48,21 +47,22 @@ public class ExpenseServices {
     // we can eventually work on concurrent hashmap for thread-safety
     // NOTE: concurrent or not, this one is just fine.
     public ExpenseResponseDTO addExpense(ExpenseRequestDTO expenseRequestDTO) {
-
         Expense expense = new Expense();
-        expense.setExpenseDescription(expenseRequestDTO.getExpenseDescription());
         expense.setAmount(expenseRequestDTO.getAmount());
+        expense.setExpenseDescription(expenseRequestDTO.getExpenseDescription());
 
-        expense.setId(firstId++);
-        expenses.add(expense);
-        expensesById.put(expense.getId(), expense);
+        Expense savedExpense = expenseRepository.save(expense);
 
-        Expense savedExpense = expensesById.get(expense.getId());
+        return toResponseDTO(savedExpense);
+    }
 
-        return new ExpenseResponseDTO(
-                savedExpense.getAmount(),
-                savedExpense.getExpenseDescription()
-        );
+    private ExpenseResponseDTO toResponseDTO(Expense expense) {
+        ExpenseResponseDTO dto = new ExpenseResponseDTO();
+        dto.setId(expense.getId());
+        dto.setAmount(expense.getAmount());
+        dto.setExpenseDescription(expense.getExpenseDescription());
+
+        return dto;
     }
     // Returns an Optional
     // Either way, if it doesn't exist it will return an Optional generic
