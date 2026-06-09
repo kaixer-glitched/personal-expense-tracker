@@ -69,23 +69,24 @@ public class ExpenseServices {
     // Returns an Optional
     // Either way, if it doesn't exist it will return an Optional generic
     public Optional<Expense> deleteExpenseById(Long id) {
-        Optional<Expense> deleteExpense = getExpenseById(id);
+        Optional<Expense> expense = expenseRepository.findById(id);
 
-        deleteExpense.ifPresent(expense -> expenses.remove(expense));
-
-        return deleteExpense;
-    }
-
-    public Optional<Expense> updateExpense(Long id, Expense updatedExpense) {
-        Expense expense = expensesById.get(id);
-
-        if (expense == null) {
-            return Optional.empty();
+        if (expense.isPresent()) {
+            expenseRepository.deleteById(id);
         }
 
-        expense.setAmount(updatedExpense.getAmount());
-        expense.setExpenseDescription(updatedExpense.getExpenseDescription());
+        return expense;
+    }
 
-        return Optional.of(expense);
+    @Transactional
+    public Optional<Expense> updateExpense(Long id, Expense updatedExpense) {
+        Optional<Expense> expense = expenseRepository.findById(id);
+
+        if (expense.isPresent()) {
+            expense.get().setAmount(updatedExpense.getAmount());
+            expense.get().setExpenseDescription(updatedExpense.getExpenseDescription());
+        }
+
+        return expense;
     }
 }
