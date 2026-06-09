@@ -58,6 +58,7 @@ public class ExpenseServices {
         return toResponseDTO(savedExpense);
     }
 
+    // this transforms / maps the received Expense to a ResponseDTO
     private ExpenseResponseDTO toResponseDTO(Expense expense) {
         ExpenseResponseDTO dto = new ExpenseResponseDTO();
         dto.setId(expense.getId());
@@ -66,27 +67,28 @@ public class ExpenseServices {
 
         return dto;
     }
+
     // Returns an Optional
     // Either way, if it doesn't exist it will return an Optional generic
-    public Optional<Expense> deleteExpenseById(Long id) {
-        Optional<Expense> expense = expenseRepository.findById(id);
+    public ExpenseResponseDTO deleteExpenseById(Long id) {
+        Expense expense = expenseRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Expense with id: " + id + " not found."));
 
-        if (expense.isPresent()) {
-            expenseRepository.deleteById(id);
-        }
+        expenseRepository.delete(expense);
 
-        return expense;
+        return toResponseDTO(expense);
     }
 
+    // we simply just @Transactional to let Spring know that we gonna let it manage this shit
+    // we will avoid save() for updates for more idiomatic approach
     @Transactional
-    public Optional<Expense> updateExpense(Long id, Expense updatedExpense) {
-        Optional<Expense> expense = expenseRepository.findById(id);
+    public ExpenseResponseDTO updateExpense(Long id, Expense updatedExpense) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense with id: " + id + " not found."));
 
-        if (expense.isPresent()) {
-            expense.get().setAmount(updatedExpense.getAmount());
-            expense.get().setExpenseDescription(updatedExpense.getExpenseDescription());
-        }
+        expense.setAmount(updatedExpense.getAmount());
+        expense.setExpenseDescription(updatedExpense.getExpenseDescription());
 
-        return expense;
+        return toResponseDTO(expense);
     }
 }
